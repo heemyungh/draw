@@ -77,14 +77,14 @@
             svg.on("mousedown", () => {
                 isdraw = true;
             });
-            svg.on("touchdown", () => {
+            svg.on("touchstart", () => {
                 isdraw = true;
             });
             svg.on("mouseup", () => {
                 isdraw = false;
                 prev = [];
             });
-            svg.on("touchup", () => {
+            svg.on("touchend", () => {
                 isdraw = false;
                 prev = [];
             });
