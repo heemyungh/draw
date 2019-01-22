@@ -30,6 +30,7 @@
                 <option value="9">9</option>
                 <option value="10">10</option>
             </select>
+            <button id="undo" title="Ctrl+Z">Undo</button>
             <button id="clear">Clear</button>
         </div>
         
@@ -38,6 +39,7 @@
         <script>
             const svg = d3.select("#svg");
             let isdraw = false;
+            // last drawn dot
             let prev = [];
 
             function draw_point() {
@@ -50,21 +52,22 @@
                 const r = document.querySelector("#r").value;
                 const color = document.querySelector("#color").value;
 
-                svg.append("circle")
-                    .attr("cx", coords[0])
-                    .attr("cy", coords[1])
-                    .attr("r", r)
-                    .style("fill", color);
+                const c = svg.append("circle")
+                             .attr("cx", coords[0])
+                             .attr("cy", coords[1])
+                             .attr("r", r)
+                             .style("fill", color);
+                stroke.push(c);
 
                 if (prev.length) {
-                    svg.append("line")
-                        .attr("x1", prev[0])
-                        .attr("y1", prev[1])
-                        .attr("x2", coords[0])
-                        .attr("y2", coords[1])
-                        .style("stroke", color)
-                        .style("stroke-width", 2*r);
-                    
+                    const l = svg.append("line")
+                                 .attr("x1", prev[0])
+                                 .attr("y1", prev[1])
+                                 .attr("x2", coords[0])
+                                 .attr("y2", coords[1])
+                                 .style("stroke", color)
+                                 .style("stroke-width", 2*r);
+                    stroke.push(l);  
                 }
 
                 // save these in case next dot is continuous with this
@@ -72,19 +75,13 @@
                 prev[1] = coords[1];
             }
 
-            svg.on("mousemove",  draw_point);
-            svg.on("touchmove", draw_point);
-            svg.on("mousedown", () => {
+            svg.on("mousemove touchmove",  draw_point);
+            svg.on("mousedown touchstart", () => {
+                // resets current stroke
+                stroke = [];
                 isdraw = true;
             });
-            svg.on("touchstart", () => {
-                isdraw = true;
-            });
-            svg.on("mouseup", () => {
-                isdraw = false;
-                prev = [];
-            });
-            svg.on("touchend", () => {
+            svg.on("mouseup touchend", () => {
                 isdraw = false;
                 prev = [];
             });
