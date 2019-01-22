@@ -4,6 +4,8 @@ if (!localStorage.getItem('canvas')) {
     localStorage.setItem('canvas', "");
 }
 
+// stroke history
+let strokes = [];
 // current stroke being drawn
 let stroke = [];
 
@@ -25,13 +27,15 @@ function save() {
 
 
 function undo() {
+    stroke = (strokes.length > 0) ? strokes[strokes.length - 1] : [];
     for (let i = stroke.length; i > 0; i--) {
         stroke[i-1].remove();
-        stroke.pop();
     }
+    strokes.pop();
 }
 
 function clear() {
     document.querySelector("#svg").innerHTML = "";
     localStorage.removeItem("canvas");
+    strokes = [];
 }

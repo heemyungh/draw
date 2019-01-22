@@ -82,6 +82,8 @@
                 isdraw = true;
             });
             svg.on("mouseup touchend", () => {
+                // adds current stroke to history
+                strokes.push(stroke);
                 isdraw = false;
                 prev = [];
             });
